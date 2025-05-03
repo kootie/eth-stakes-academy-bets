@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import CourseCard from '@/components/CourseCard';
@@ -9,7 +8,7 @@ import UserProfile from '@/components/UserProfile';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockCourses, mockModules, mockUser } from '@/data/mockData';
 import { useToast } from "@/components/ui/use-toast";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const [modules, setModules] = useState(mockModules);
@@ -17,6 +16,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const { toast } = useToast();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Handle hash navigation
   useEffect(() => {
@@ -25,6 +25,11 @@ const Index = () => {
       setActiveTab(hash);
     }
   }, [location]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    navigate(`/#${value}`, { replace: true });
+  };
 
   // Find courses that the user is enrolled in
   const enrolledCourses = mockCourses.filter(course => 
@@ -83,12 +88,12 @@ const Index = () => {
           
           {/* Main content area */}
           <div className="lg:col-span-3">
-            <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab}>
+            <Tabs defaultValue={activeTab} value={activeTab} onValueChange={handleTabChange}>
               <TabsList className="mb-6">
-                <TabsTrigger value="dashboard" onClick={() => window.location.hash = 'dashboard'}>Dashboard</TabsTrigger>
-                <TabsTrigger value="courses" onClick={() => window.location.hash = 'courses'}>All Courses</TabsTrigger>
-                <TabsTrigger value="staking" onClick={() => window.location.hash = 'staking'}>Staking</TabsTrigger>
-                <TabsTrigger value="cheering" onClick={() => window.location.hash = 'cheering'}>Cheering</TabsTrigger>
+                <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+                <TabsTrigger value="courses">All Courses</TabsTrigger>
+                <TabsTrigger value="staking">Staking</TabsTrigger>
+                <TabsTrigger value="cheering">Cheering</TabsTrigger>
               </TabsList>
               
               <TabsContent value="dashboard" id="dashboard" className="space-y-6">
