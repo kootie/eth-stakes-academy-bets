@@ -2,19 +2,25 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { mockUser } from '@/data/mockData';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleNavigation = (hash: string) => {
+    navigate(`/#${hash}`);
+  };
+
   return (
     <nav className="bg-web3-dark border-b border-web3-primary/20 py-4 px-6">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold web3-gradient-text mr-8">Web3 Academy</h1>
           <div className="hidden md:flex space-x-6">
-            <Link to="/#dashboard" className="text-white hover:text-web3-secondary transition-colors">Dashboard</Link>
-            <Link to="/#courses" className="text-white hover:text-web3-secondary transition-colors">Courses</Link>
-            <Link to="/#staking" className="text-white hover:text-web3-secondary transition-colors">Staking</Link>
-            <Link to="/#cheering" className="text-white hover:text-web3-secondary transition-colors">Cheering</Link>
+            <button onClick={() => handleNavigation('dashboard')} className="text-white hover:text-web3-secondary transition-colors">Dashboard</button>
+            <button onClick={() => handleNavigation('courses')} className="text-white hover:text-web3-secondary transition-colors">Courses</button>
+            <button onClick={() => handleNavigation('staking')} className="text-white hover:text-web3-secondary transition-colors">Staking</button>
+            <button onClick={() => handleNavigation('cheering')} className="text-white hover:text-web3-secondary transition-colors">Cheering</button>
           </div>
         </div>
         
