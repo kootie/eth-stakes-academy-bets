@@ -24,8 +24,8 @@ const BettingInterface: React.FC<BettingInterfaceProps> = ({ course, studentName
   const handleBetSubmit = () => {
     if (amount <= 0) {
       toast({
-        title: "Invalid bet amount",
-        description: "Please enter a valid amount to bet",
+        title: "Invalid cheer amount",
+        description: "Please enter a valid amount to cheer with",
         variant: "destructive",
       });
       return;
@@ -34,8 +34,8 @@ const BettingInterface: React.FC<BettingInterfaceProps> = ({ course, studentName
     onPlaceBet(prediction, amount, prediction === "complete" ? grade : undefined);
     
     toast({
-      title: "Bet placed successfully!",
-      description: `You bet ${amount} ETH that ${studentName} will ${prediction === 'complete' ? 'complete' : 'not complete'} the course${grade ? ` with a grade of ${grade}` : ''}`,
+      title: "Cheer placed successfully!",
+      description: `You cheered ${amount} ETH that ${studentName} will ${prediction === 'complete' ? 'complete' : 'not complete'} the course${grade ? ` with a grade of ${grade}` : ''}`,
     });
   };
 
@@ -46,9 +46,9 @@ const BettingInterface: React.FC<BettingInterfaceProps> = ({ course, studentName
   return (
     <Card className="border-web3-primary/20">
       <CardHeader>
-        <CardTitle>Place a Bet</CardTitle>
+        <CardTitle>Place a Cheer</CardTitle>
         <CardDescription>
-          Bet on whether {studentName} will complete "{course.title}"
+          Cheer on whether {studentName} will complete "{course.title}"
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -86,7 +86,7 @@ const BettingInterface: React.FC<BettingInterfaceProps> = ({ course, studentName
           )}
           
           <div className="space-y-2">
-            <Label htmlFor="bet-amount">Bet Amount (ETH)</Label>
+            <Label htmlFor="bet-amount">Cheer Amount (ETH)</Label>
             <div className="relative">
               <Input
                 id="bet-amount"
@@ -120,7 +120,7 @@ const BettingInterface: React.FC<BettingInterfaceProps> = ({ course, studentName
           className="w-full bg-web3-gradient hover:brightness-110 transition-all text-white"
           onClick={handleBetSubmit}
         >
-          Place Bet
+          Place Cheer
         </Button>
       </CardFooter>
     </Card>

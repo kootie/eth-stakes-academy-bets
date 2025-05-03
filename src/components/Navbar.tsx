@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { mockUser } from '@/data/mockData';
+import { Link } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   return (
@@ -10,10 +11,10 @@ const Navbar: React.FC = () => {
         <div className="flex items-center">
           <h1 className="text-2xl font-bold web3-gradient-text mr-8">Web3 Academy</h1>
           <div className="hidden md:flex space-x-6">
-            <a href="#" className="text-white hover:text-web3-secondary transition-colors">Dashboard</a>
-            <a href="#" className="text-white hover:text-web3-secondary transition-colors">Courses</a>
-            <a href="#" className="text-white hover:text-web3-secondary transition-colors">Staking</a>
-            <a href="#" className="text-white hover:text-web3-secondary transition-colors">Betting</a>
+            <Link to="/#dashboard" className="text-white hover:text-web3-secondary transition-colors">Dashboard</Link>
+            <Link to="/#courses" className="text-white hover:text-web3-secondary transition-colors">Courses</Link>
+            <Link to="/#staking" className="text-white hover:text-web3-secondary transition-colors">Staking</Link>
+            <Link to="/#cheering" className="text-white hover:text-web3-secondary transition-colors">Cheering</Link>
           </div>
         </div>
         

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import CourseCard from '@/components/CourseCard';
 import StakingForm from '@/components/StakingForm';
@@ -9,11 +9,22 @@ import UserProfile from '@/components/UserProfile';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockCourses, mockModules, mockUser } from '@/data/mockData';
 import { useToast } from "@/components/ui/use-toast";
+import { useLocation } from 'react-router-dom';
 
 const Index = () => {
   const [modules, setModules] = useState(mockModules);
   const [user, setUser] = useState(mockUser);
+  const [activeTab, setActiveTab] = useState("dashboard");
   const { toast } = useToast();
+  const location = useLocation();
+
+  // Handle hash navigation
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    if (hash && ['dashboard', 'courses', 'staking', 'cheering'].includes(hash)) {
+      setActiveTab(hash);
+    }
+  }, [location]);
 
   // Find courses that the user is enrolled in
   const enrolledCourses = mockCourses.filter(course => 
@@ -47,8 +58,8 @@ const Index = () => {
   const handleBet = (prediction: "complete" | "incomplete", amount: number, grade?: string) => {
     // In a real app, this would connect to a wallet and place a bet
     toast({
-      title: "Bet placed",
-      description: `You've bet ${amount} ETH. Good luck!`,
+      title: "Cheer placed",
+      description: `You've cheered with ${amount} ETH. Good luck!`,
     });
   };
 
@@ -72,15 +83,15 @@ const Index = () => {
           
           {/* Main content area */}
           <div className="lg:col-span-3">
-            <Tabs defaultValue="dashboard">
+            <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="mb-6">
-                <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-                <TabsTrigger value="courses">All Courses</TabsTrigger>
-                <TabsTrigger value="staking">Staking</TabsTrigger>
-                <TabsTrigger value="betting">Betting</TabsTrigger>
+                <TabsTrigger value="dashboard" onClick={() => window.location.hash = 'dashboard'}>Dashboard</TabsTrigger>
+                <TabsTrigger value="courses" onClick={() => window.location.hash = 'courses'}>All Courses</TabsTrigger>
+                <TabsTrigger value="staking" onClick={() => window.location.hash = 'staking'}>Staking</TabsTrigger>
+                <TabsTrigger value="cheering" onClick={() => window.location.hash = 'cheering'}>Cheering</TabsTrigger>
               </TabsList>
               
-              <TabsContent value="dashboard" className="space-y-6">
+              <TabsContent value="dashboard" id="dashboard" className="space-y-6">
                 <section>
                   <h2 className="text-2xl font-bold mb-4">Your Learning Journey</h2>
                   <div className="grid grid-cols-1 gap-4">
@@ -116,7 +127,7 @@ const Index = () => {
                 </section>
               </TabsContent>
               
-              <TabsContent value="courses">
+              <TabsContent value="courses" id="courses">
                 <section>
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-bold">All Courses</h2>
@@ -129,7 +140,7 @@ const Index = () => {
                 </section>
               </TabsContent>
               
-              <TabsContent value="staking">
+              <TabsContent value="staking" id="staking">
                 <section className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold mb-4">Your Stakes</h2>
@@ -168,13 +179,13 @@ const Index = () => {
                 </section>
               </TabsContent>
               
-              <TabsContent value="betting">
+              <TabsContent value="cheering" id="cheering">
                 <section className="space-y-6">
-                  <h2 className="text-2xl font-bold mb-4">Betting Dashboard</h2>
+                  <h2 className="text-2xl font-bold mb-4">Cheering Dashboard</h2>
                   
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div>
-                      <h3 className="text-xl font-medium mb-4">Place a Bet</h3>
+                      <h3 className="text-xl font-medium mb-4">Cheer a Student</h3>
                       <BettingInterface 
                         course={mockCourses[0]} 
                         studentName="Alex Rodriguez" 
@@ -183,25 +194,25 @@ const Index = () => {
                     </div>
                     
                     <div>
-                      <h3 className="text-xl font-medium mb-4">Active Bets</h3>
+                      <h3 className="text-xl font-medium mb-4">Active Cheers</h3>
                       <div className="bg-white p-6 rounded-lg shadow border border-gray-200">
-                        <p className="text-center text-gray-500 py-8">No active bets yet</p>
-                        {/* In a real app, this would show active bets */}
+                        <p className="text-center text-gray-500 py-8">No active cheers yet</p>
+                        {/* In a real app, this would show active cheers */}
                       </div>
                     </div>
                   </div>
                   
                   <div className="bg-gray-50 p-6 rounded-lg">
-                    <h3 className="text-xl font-medium mb-4">How Betting Works</h3>
+                    <h3 className="text-xl font-medium mb-4">How Cheering Works</h3>
                     <div className="space-y-4 text-sm">
-                      <p>You can place bets on whether students will complete courses and what grades they'll achieve.</p>
+                      <p>You can cheer students on whether they will complete courses and what grades they'll achieve.</p>
                       <div className="flex space-x-2 items-center">
                         <div className="h-2 w-2 bg-web3-primary rounded-full"></div>
                         <span>If your prediction is correct, you earn returns based on the odds.</span>
                       </div>
                       <div className="flex space-x-2 items-center">
                         <div className="h-2 w-2 bg-web3-primary rounded-full"></div>
-                        <span>Students who complete courses earn their stake back plus a share of losing bets.</span>
+                        <span>Students who complete courses earn their stake back plus a share of losing cheers.</span>
                       </div>
                       <div className="flex space-x-2 items-center">
                         <div className="h-2 w-2 bg-web3-primary rounded-full"></div>
@@ -229,7 +240,7 @@ const Index = () => {
                 <ul className="text-sm text-gray-400 space-y-1">
                   <li>Courses</li>
                   <li>Staking</li>
-                  <li>Betting</li>
+                  <li>Cheering</li>
                 </ul>
               </div>
               <div>
