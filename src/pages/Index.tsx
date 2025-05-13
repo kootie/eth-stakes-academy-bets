@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import CourseCard from '@/components/CourseCard';
@@ -5,18 +6,22 @@ import StakingForm from '@/components/StakingForm';
 import BettingInterface from '@/components/BettingInterface';
 import CurriculumView from '@/components/CurriculumView';
 import UserProfile from '@/components/UserProfile';
+import ActiveCheers from '@/components/ActiveCheers';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockCourses, mockModules, mockUser } from '@/data/mockData';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useWalletContext } from '@/contexts/WalletContext';
 
 const Index = () => {
   const [modules, setModules] = useState(mockModules);
   const [user, setUser] = useState(mockUser);
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeCheers, setActiveCheers] = useState<any[]>([]);
   const { toast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
+  const { wallet } = useWalletContext();
 
   // Handle hash navigation
   useEffect(() => {
@@ -25,6 +30,17 @@ const Index = () => {
       setActiveTab(hash);
     }
   }, [location]);
+
+  useEffect(() => {
+    // Update user data when wallet changes
+    if (wallet.isConnected) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        walletAddress: wallet.address,
+        stakingBalance: parseFloat(wallet.balance)
+      }));
+    }
+  }, [wallet]);
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -49,12 +65,12 @@ const Index = () => {
     }
   };
 
-  const handleStake = (amount: number) => {
+  const handleStake = (courseId: string, amount: number) => {
     // In a real app, this would connect to a wallet and stake ETH
     const updatedUser = { 
       ...user, 
-      stakingBalance: user.stakingBalance + amount,
-      enrolledCourses: [...user.enrolledCourses, "2"] // Simulating enrollment in another course
+      stakingBalance: user.stakingBalance - amount,
+      enrolledCourses: [...user.enrolledCourses, courseId]
     };
     
     setUser(updatedUser);
@@ -66,6 +82,22 @@ const Index = () => {
       title: "Cheer placed",
       description: `You've cheered with ${amount} ETH. Good luck!`,
     });
+
+    // Create a new cheer and add it to active cheers
+    const newCheer = {
+      id: `cheer-${Date.now()}`,
+      studentName: "Alex Rodriguez",
+      courseName: "Web3 Startup Fundamentals",
+      prediction,
+      amount,
+      grade,
+      odds: prediction === "complete" ? 1.5 : 2.5,
+      potentialReturn: amount * (prediction === "complete" ? 1.5 : 2.5),
+      status: "active",
+      timestamp: new Date().toISOString(),
+    };
+
+    setActiveCheers([newCheer, ...activeCheers]);
   };
 
   const handleModuleComplete = (moduleId: string, isComplete: boolean) => {
@@ -100,7 +132,7 @@ const Index = () => {
                 <section>
                   <h2 className="text-2xl font-bold mb-4">Your Learning Journey</h2>
                   <div className="grid grid-cols-1 gap-4">
-                    {user.enrolledCourses.length > 0 ? (
+                    {wallet.isConnected && user.enrolledCourses.length > 0 ? (
                       <CurriculumView 
                         modules={modules} 
                         courseName="Web3 Startup Fundamentals" 
@@ -112,6 +144,7 @@ const Index = () => {
                         <p className="mb-4">Enroll in a course to begin your Web3 learning journey.</p>
                         <StakingForm 
                           courseTitle="Web3 Startup Fundamentals" 
+                          courseId="1"
                           minimumStake={0.5} 
                           onStake={handleStake} 
                         />
@@ -199,11 +232,7 @@ const Index = () => {
                     </div>
                     
                     <div>
-                      <h3 className="text-xl font-medium mb-4">Active Cheers</h3>
-                      <div className="bg-white p-6 rounded-lg shadow border border-gray-200">
-                        <p className="text-center text-gray-500 py-8">No active cheers yet</p>
-                        {/* In a real app, this would show active cheers */}
-                      </div>
+                      <ActiveCheers cheers={activeCheers} />
                     </div>
                   </div>
                   

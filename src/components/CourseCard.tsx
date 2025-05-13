@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Course } from '@/data/mockData';
+import { useWalletContext } from '@/contexts/WalletContext';
 
 interface CourseCardProps {
   course: Course;
@@ -11,6 +12,10 @@ interface CourseCardProps {
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
+  const { wallet } = useWalletContext();
+  
+  const isEnrolled = wallet.isConnected && Math.random() > 0.7; // Simulated enrollment check
+  
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-web3-primary/20">
       <div className="relative h-48 w-full">
@@ -41,12 +46,18 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
           <span className="eth-icon text-sm font-medium">{course.stakingAmount} ETH stake</span>
           <p className="text-xs text-gray-500">{course.enrolled} enrolled</p>
         </div>
-        <Button 
-          className="bg-web3-gradient hover:brightness-110 transition-all text-white"
-          onClick={() => onEnroll(course.id)}
-        >
-          Enroll Now
-        </Button>
+        {isEnrolled ? (
+          <Button variant="outline" className="border-web3-primary text-web3-primary">
+            Continue Learning
+          </Button>
+        ) : (
+          <Button 
+            className="bg-web3-gradient hover:brightness-110 transition-all text-white"
+            onClick={() => onEnroll(course.id)}
+          >
+            Enroll Now
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

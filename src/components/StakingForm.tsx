@@ -1,23 +1,35 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { useWalletContext } from '@/contexts/WalletContext';
 
 interface StakingFormProps {
   courseTitle: string;
+  courseId: string;
   minimumStake: number;
-  onStake: (amount: number) => void;
+  onStake: (courseId: string, amount: number) => void;
 }
 
-const StakingForm: React.FC<StakingFormProps> = ({ courseTitle, minimumStake, onStake }) => {
+const StakingForm: React.FC<StakingFormProps> = ({ courseTitle, courseId, minimumStake, onStake }) => {
   const [amount, setAmount] = useState<number>(minimumStake);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isStaking, setIsStaking] = useState(false);
   const { toast } = useToast();
+  const { wallet, connectWallet } = useWalletContext();
 
-  const handleStake = () => {
+  const handleStakeClick = async () => {
+    if (!wallet.isConnected) {
+      const connected = await connectWallet();
+      if (!connected) return;
+    }
+    setDialogOpen(true);
+  };
+
+  const handleStake = async () => {
     if (amount < minimumStake) {
       toast({
         title: "Invalid stake amount",
@@ -26,19 +38,57 @@ const StakingForm: React.FC<StakingFormProps> = ({ courseTitle, minimumStake, on
       });
       return;
     }
-    
-    onStake(amount);
-    toast({
-      title: "Stake successful!",
-      description: `You have staked ${amount} ETH for ${courseTitle}`,
-    });
-    setDialogOpen(false);
+
+    if (!wallet.isConnected) {
+      toast({
+        title: "Wallet not connected",
+        description: "Please connect your wallet to stake",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (parseFloat(wallet.balance) < amount) {
+      toast({
+        title: "Insufficient funds",
+        description: `You need at least ${amount} ETH to stake`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsStaking(true);
+
+    try {
+      // In a real app, this would trigger an actual blockchain transaction
+      // Simulating transaction time
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      onStake(courseId, amount);
+      toast({
+        title: "Stake successful!",
+        description: `You have staked ${amount} ETH for ${courseTitle}`,
+      });
+      setDialogOpen(false);
+    } catch (error) {
+      console.error("Staking error:", error);
+      toast({
+        title: "Staking failed",
+        description: "There was an error processing your stake",
+        variant: "destructive",
+      });
+    } finally {
+      setIsStaking(false);
+    }
   };
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-web3-gradient hover:brightness-110 transition-all text-white">
+        <Button 
+          className="bg-web3-gradient hover:brightness-110 transition-all text-white"
+          onClick={handleStakeClick}
+        >
           Stake to Enroll
         </Button>
       </DialogTrigger>
@@ -79,14 +129,22 @@ const StakingForm: React.FC<StakingFormProps> = ({ courseTitle, minimumStake, on
               </CardContent>
             </Card>
           </div>
+          
+          {wallet.isConnected && (
+            <div className="flex justify-between text-sm px-2">
+              <span className="text-gray-600">Wallet Balance:</span>
+              <span className="font-medium">{wallet.balance} ETH</span>
+            </div>
+          )}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
           <Button 
             className="bg-web3-gradient hover:brightness-110 transition-all text-white"
             onClick={handleStake}
+            disabled={isStaking}
           >
-            Confirm Stake
+            {isStaking ? "Processing..." : "Confirm Stake"}
           </Button>
         </DialogFooter>
       </DialogContent>
