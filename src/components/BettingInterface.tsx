@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Course } from '@/data/mockData';
 import { useToast } from "@/hooks/use-toast";
 import { useWalletContext } from '@/contexts/WalletContext';
-import { Wallet, Cheering } from "lucide-react";
+import { Wallet, Award } from "lucide-react";
 
 interface BettingInterfaceProps {
   course: Course;
@@ -82,7 +82,7 @@ const BettingInterface: React.FC<BettingInterfaceProps> = ({ course, studentName
     <Card className="border-web3-primary/20">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
-          <Cheering className="h-5 w-5 text-web3-primary" />
+          <Award className="h-5 w-5 text-web3-primary" />
           <span>Place a Cheer</span>
         </CardTitle>
         <CardDescription>
@@ -174,7 +174,7 @@ const BettingInterface: React.FC<BettingInterfaceProps> = ({ course, studentName
             "Processing..."
           ) : (
             <>
-              <Cheering className="mr-2 h-4 w-4" />
+              <Award className="mr-2 h-4 w-4" />
               Place Cheer
             </>
           )}
