@@ -178,13 +178,5 @@ export const useWallet = () => {
   };
 };
 
-// Add window.ethereum type definition
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: any[] }) => Promise<any>;
-      on: (event: string, callback: (...args: any[]) => void) => void;
-      removeListener: (event: string, callback: (...args: any[]) => void) => void;
-    };
-  }
-}
+// Note: We're not adding the window.ethereum type definition here
+// as it's already defined in the src/types/ethereum.d.ts file
