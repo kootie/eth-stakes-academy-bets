@@ -1,5 +1,7 @@
 
-export type Course = {
+// Mock data for the Web3 Academy platform
+
+export interface Course {
   id: string;
   title: string;
   description: string;
@@ -7,178 +9,158 @@ export type Course = {
   modules: number;
   stakingAmount: number;
   enrolled: number;
-  image: string;
   tags: string[];
-};
+  image: string;
+}
 
-export type Module = {
+export interface Module {
   id: string;
-  courseId: string;
   title: string;
   description: string;
   duration: string;
   completed: boolean;
-};
-
-export type Bet = {
-  id: string;
-  studentId: string;
   courseId: string;
-  amount: number;
-  prediction: "complete" | "incomplete";
-  predictedGrade?: string;
-  odds: number;
-  status: "active" | "won" | "lost";
-};
+}
 
-export type UserProfile = {
+export interface UserProfile {
   id: string;
   name: string;
-  avatar: string;
   walletAddress: string;
+  avatar: string;
   stakingBalance: number;
   enrolledCourses: string[];
   completedCourses: string[];
-  bets: Bet[];
-};
+}
 
+// Mock Courses
 export const mockCourses: Course[] = [
   {
     id: "1",
     title: "Web3 Startup Fundamentals",
-    description: "Learn how to build and launch a Web3 startup from ideation to execution.",
+    description: "Learn how to build, launch, and scale Web3 startups from ideation to product-market fit. This course covers tokenomics, community building, and decentralized governance.",
     duration: "8 weeks",
-    modules: 6,
+    modules: 12,
     stakingAmount: 0.5,
-    enrolled: 124,
-    image: "https://source.unsplash.com/random/300x200/?blockchain",
-    tags: ["startup", "web3", "business"]
+    enrolled: 342,
+    tags: ["Startup", "Tokenomics", "Governance"],
+    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1470&auto=format&fit=crop"
   },
   {
     id: "2",
     title: "Smart Contract Development",
-    description: "Build secure and efficient smart contracts for your decentralized applications.",
-    duration: "6 weeks",
-    modules: 8,
+    description: "Master Solidity and build secure, gas-efficient smart contracts. Covers best practices, security patterns, upgradability, and integration with frontends.",
+    duration: "10 weeks",
+    modules: 15,
     stakingAmount: 0.75,
-    enrolled: 86,
-    image: "https://source.unsplash.com/random/300x200/?code",
-    tags: ["development", "solidity", "ethereum"]
+    enrolled: 256,
+    tags: ["Solidity", "Security", "Development"],
+    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=1470&auto=format&fit=crop"
   },
   {
     id: "3",
-    title: "DAO Governance & Structure",
-    description: "Understand how to create and manage a Decentralized Autonomous Organization.",
-    duration: "4 weeks",
-    modules: 5,
-    stakingAmount: 0.3,
-    enrolled: 56,
-    image: "https://source.unsplash.com/random/300x200/?network",
-    tags: ["governance", "dao", "community"]
+    title: "DeFi Protocols & Mechanisms",
+    description: "Deep dive into decentralized finance protocols, including AMMs, lending, yield farming, and insurance. Understand economic security and liquidity dynamics.",
+    duration: "6 weeks",
+    modules: 9,
+    stakingAmount: 0.6,
+    enrolled: 198,
+    tags: ["DeFi", "Lending", "AMM"],
+    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=1470&auto=format&fit=crop"
   },
   {
     id: "4",
-    title: "Tokenomics & Market Design",
-    description: "Learn how to design token economics for your project that align incentives.",
+    title: "NFT Creation & Marketing",
+    description: "Learn to design, mint, and market NFT collections. Covers metadata, rarity, marketplaces, and community growth strategies.",
     duration: "5 weeks",
-    modules: 7,
-    stakingAmount: 0.6,
-    enrolled: 92,
-    image: "https://source.unsplash.com/random/300x200/?cryptocurrency",
-    tags: ["tokenomics", "economics", "incentives"]
-  }
+    modules: 8,
+    stakingAmount: 0.45,
+    enrolled: 275,
+    tags: ["NFT", "Art", "Marketing"],
+    image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?q=80&w=1470&auto=format&fit=crop"
+  },
+  {
+    id: "5",
+    title: "DAOs & Community Governance",
+    description: "Master the art of building and maintaining decentralized autonomous organizations. Learn voting mechanisms, treasury management, and coordination tools.",
+    duration: "7 weeks",
+    modules: 10,
+    stakingAmount: 0.65,
+    enrolled: 167,
+    tags: ["DAO", "Governance", "Treasury"],
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1470&auto=format&fit=crop"
+  },
+  {
+    id: "6",
+    title: "Blockchain Fundamentals",
+    description: "Understand the core principles behind blockchain technology, including consensus mechanisms, cryptography, and network incentives.",
+    duration: "4 weeks",
+    modules: 6,
+    stakingAmount: 0.3,
+    enrolled: 421,
+    tags: ["Blockchain", "Consensus", "Crypto"],
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?q=80&w=1470&auto=format&fit=crop"
+  },
 ];
 
+// Mock Modules for Web3 Startup Fundamentals course
 export const mockModules: Module[] = [
   {
     id: "m1",
-    courseId: "1",
-    title: "Ideation & Market Research",
-    description: "How to identify opportunities in the Web3 space and validate your ideas.",
-    duration: "1 week",
-    completed: false
+    title: "Web3 Startup Landscape",
+    description: "Overview of the current Web3 startup ecosystem, key players, and emerging trends.",
+    duration: "2 hours",
+    completed: true,
+    courseId: "1"
   },
   {
     id: "m2",
-    courseId: "1",
-    title: "Business Model Canvas for Web3",
-    description: "Creating a business model that works in the decentralized economy.",
-    duration: "1 week",
-    completed: false
+    title: "Building a Web3 Business Model",
+    description: "Learn how to create sustainable tokenomics and revenue models for your Web3 startup.",
+    duration: "3 hours",
+    completed: true,
+    courseId: "1"
   },
   {
     id: "m3",
-    courseId: "1",
-    title: "Legal Structure & Compliance",
-    description: "Navigate the complex legal landscape of crypto startups.",
-    duration: "2 weeks",
-    completed: false
+    title: "Decentralized Governance",
+    description: "Explore different governance mechanisms and how to implement them effectively.",
+    duration: "2.5 hours",
+    completed: false,
+    courseId: "1"
   },
   {
     id: "m4",
-    courseId: "1",
-    title: "Community Building",
-    description: "Strategies for building and engaging a community around your project.",
-    duration: "1 week",
-    completed: false
+    title: "Community Building Strategies",
+    description: "Techniques for building and nurturing an engaged community around your Web3 project.",
+    duration: "2 hours",
+    completed: false,
+    courseId: "1"
   },
   {
     id: "m5",
-    courseId: "1",
-    title: "Fundraising Strategies",
-    description: "From token sales to VC funding - choose the right approach for your project.",
-    duration: "2 weeks",
-    completed: false
+    title: "Fundraising in Web3",
+    description: "Understand different fundraising options from token sales to VC investment in the Web3 space.",
+    duration: "3 hours",
+    completed: false,
+    courseId: "1"
   },
   {
     id: "m6",
-    courseId: "1",
-    title: "Launch & Growth",
-    description: "Planning and executing a successful product launch and growth strategy.",
-    duration: "1 week",
-    completed: false
+    title: "Legal & Regulatory Considerations",
+    description: "Navigate the complex legal landscape of blockchain and cryptocurrency startups.",
+    duration: "2.5 hours",
+    completed: false,
+    courseId: "1"
   }
 ];
 
+// Mock User Profile
 export const mockUser: UserProfile = {
   id: "u1",
   name: "Alex Rodriguez",
-  avatar: "https://source.unsplash.com/random/100x100/?portrait",
-  walletAddress: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-  stakingBalance: 1.25,
+  walletAddress: "0x1234...5678",
+  avatar: "https://api.dicebear.com/7.x/personas/svg?seed=Alex",
+  stakingBalance: 2.5,
   enrolledCourses: ["1"],
-  completedCourses: [],
-  bets: []
+  completedCourses: []
 };
-
-export const mockBets: Bet[] = [
-  {
-    id: "b1",
-    studentId: "u2",
-    courseId: "1",
-    amount: 0.2,
-    prediction: "complete",
-    predictedGrade: "A",
-    odds: 1.5,
-    status: "active"
-  },
-  {
-    id: "b2",
-    studentId: "u3",
-    courseId: "2",
-    amount: 0.1,
-    prediction: "incomplete",
-    odds: 2.3,
-    status: "active"
-  },
-  {
-    id: "b3",
-    studentId: "u4",
-    courseId: "3",
-    amount: 0.3,
-    prediction: "complete",
-    predictedGrade: "B",
-    odds: 1.8,
-    status: "won"
-  }
-];

@@ -2,9 +2,9 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Circle, CircleCheck, CircleX } from "lucide-react";
+import { formatDistanceToNow } from 'date-fns';
 
-interface CheerData {
+interface Cheer {
   id: string;
   studentName: string;
   courseName: string;
@@ -18,89 +18,77 @@ interface CheerData {
 }
 
 interface ActiveCheersProps {
-  cheers: CheerData[];
+  cheers: Cheer[];
 }
 
 const ActiveCheers: React.FC<ActiveCheersProps> = ({ cheers }) => {
-  if (cheers.length === 0) {
-    return (
-      <Card className="border-web3-primary/20">
-        <CardHeader>
-          <CardTitle>Active Cheers</CardTitle>
-          <CardDescription>Cheers you've placed on student outcomes</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-center text-gray-500 py-8">No active cheers yet</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <Card className="border-web3-primary/20">
       <CardHeader>
-        <CardTitle>Active Cheers</CardTitle>
-        <CardDescription>Cheers you've placed on student outcomes</CardDescription>
+        <CardTitle className="flex items-center space-x-2">
+          <span>Your Active Cheers</span>
+        </CardTitle>
+        <CardDescription>
+          Track the status of your active cheers
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          {cheers.map((cheer) => (
-            <Card key={cheer.id} className="overflow-hidden border-gray-200">
-              <div className="border-l-4 border-web3-primary p-4 space-y-2">
-                <div className="flex justify-between items-start">
+        {cheers.length > 0 ? (
+          <div className="space-y-4">
+            {cheers.map((cheer) => (
+              <div 
+                key={cheer.id} 
+                className="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex justify-between items-start mb-2">
                   <div>
                     <h4 className="font-medium">{cheer.studentName}</h4>
                     <p className="text-sm text-gray-600">{cheer.courseName}</p>
                   </div>
-                  {cheer.status === "active" && (
-                    <Badge className="bg-web3-primary/70 hover:bg-web3-primary">
-                      <Circle className="w-3 h-3 mr-1 animate-pulse" />
-                      Active
-                    </Badge>
-                  )}
-                  {cheer.status === "won" && (
-                    <Badge className="bg-green-500 hover:bg-green-600">
-                      <CircleCheck className="w-3 h-3 mr-1" />
-                      Won
-                    </Badge>
-                  )}
-                  {cheer.status === "lost" && (
-                    <Badge className="bg-red-500 hover:bg-red-600">
-                      <CircleX className="w-3 h-3 mr-1" />
-                      Lost
-                    </Badge>
-                  )}
+                  <Badge 
+                    className={`
+                      ${cheer.status === 'active' ? 'bg-amber-400 hover:bg-amber-500' : 
+                        cheer.status === 'won' ? 'bg-emerald-500 hover:bg-emerald-600' : 
+                        'bg-red-500 hover:bg-red-600'} 
+                      text-white
+                    `}
+                  >
+                    {cheer.status.charAt(0).toUpperCase() + cheer.status.slice(1)}
+                  </Badge>
                 </div>
                 
                 <div className="flex justify-between text-sm">
-                  <span>Prediction:</span>
-                  <span className="font-medium">
-                    {cheer.prediction === "complete" ? (
-                      <>Will complete {cheer.grade && `(Grade: ${cheer.grade})`}</>
-                    ) : (
-                      <>Will not complete</>
-                    )}
+                  <span className="text-gray-600">
+                    Prediction: <span className="font-medium">
+                      {cheer.prediction === 'complete' ? 'Will complete' : 'Will not complete'}
+                      {cheer.grade ? ` with ${cheer.grade}` : ''}
+                    </span>
                   </span>
                 </div>
                 
-                <div className="flex justify-between text-sm">
-                  <span>Amount:</span>
+                <div className="flex justify-between text-sm mt-1">
+                  <span className="text-gray-600">Amount staked:</span>
                   <span className="eth-icon font-medium">{cheer.amount} ETH</span>
                 </div>
                 
-                <div className="flex justify-between text-sm">
-                  <span>Potential Return:</span>
+                <div className="flex justify-between text-sm mt-1">
+                  <span className="text-gray-600">Potential return:</span>
                   <span className="eth-icon font-medium">{cheer.potentialReturn.toFixed(4)} ETH</span>
                 </div>
                 
-                <div className="flex justify-between text-sm text-gray-500">
-                  <span>Placed on:</span>
-                  <span>{new Date(cheer.timestamp).toLocaleDateString()}</span>
+                <div className="flex justify-between text-sm mt-1 text-gray-500 pt-2 border-t border-gray-100">
+                  <span>Odds: {cheer.odds}x</span>
+                  <span>{formatDistanceToNow(new Date(cheer.timestamp))} ago</span>
                 </div>
               </div>
-            </Card>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-6 text-gray-500">
+            <p>You don't have any active cheers yet.</p>
+            <p className="text-sm mt-1">Start cheering on students to see them here!</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
