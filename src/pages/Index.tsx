@@ -112,6 +112,35 @@ const Index = () => {
       <Navbar />
       
       <main className="container mx-auto px-4 py-8">
+        {/* Hero Section */}
+        <section className="text-center mb-12">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            <span className="web3-gradient-text">Technical Skills Academy</span>
+          </h1>
+          <p className="text-xl text-gray-600 mb-6 max-w-3xl mx-auto">
+            Master practical trades enhanced with AI and blockchain technology. 
+            Build the skills needed to maintain and operate tomorrow's smart infrastructure.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500 mb-8">
+            <span className="flex items-center">
+              <div className="w-2 h-2 bg-web3-primary rounded-full mr-2"></div>
+              Hands-on Learning
+            </span>
+            <span className="flex items-center">
+              <div className="w-2 h-2 bg-web3-secondary rounded-full mr-2"></div>
+              AI-Enhanced Tools
+            </span>
+            <span className="flex items-center">
+              <div className="w-2 h-2 bg-web3-success rounded-full mr-2"></div>
+              Blockchain Certified
+            </span>
+            <span className="flex items-center">
+              <div className="w-2 h-2 bg-web3-warning rounded-full mr-2"></div>
+              Community Cheering
+            </span>
+          </div>
+        </section>
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar with user profile */}
           <div className="lg:col-span-1">
@@ -125,7 +154,7 @@ const Index = () => {
                 <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
                 <TabsTrigger value="courses">All Courses</TabsTrigger>
                 <TabsTrigger value="staking">Staking</TabsTrigger>
-                <TabsTrigger value="cheering">Cheering</TabsTrigger>
+                <TabsTrigger value="cheering">Community Cheering</TabsTrigger>
               </TabsList>
               
               <TabsContent value="dashboard" id="dashboard" className="space-y-6">
@@ -135,17 +164,17 @@ const Index = () => {
                     {wallet.isConnected && user.enrolledCourses.length > 0 ? (
                       <CurriculumView 
                         modules={modules} 
-                        courseName="Web3 Startup Fundamentals" 
+                        courseName="Smart Electrical Systems" 
                         onModuleComplete={handleModuleComplete} 
                       />
                     ) : (
                       <div className="bg-white p-6 rounded-lg shadow text-center">
-                        <h3 className="text-xl font-medium mb-2">Get Started</h3>
-                        <p className="mb-4">Enroll in a course to begin your Web3 learning journey.</p>
+                        <h3 className="text-xl font-medium mb-2">Start Your Trade Career</h3>
+                        <p className="mb-4">Begin with foundational skills and advance to AI-enhanced techniques.</p>
                         <StakingForm 
-                          courseTitle="Web3 Startup Fundamentals" 
+                          courseTitle="Smart Electrical Systems" 
                           courseId="1"
-                          minimumStake={0.5} 
+                          minimumStake={0.8} 
                           onStake={handleStake} 
                         />
                       </div>
@@ -155,7 +184,7 @@ const Index = () => {
                 
                 <section>
                   <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold">Recommended Courses</h2>
+                    <h2 className="text-2xl font-bold">Popular Trade Courses</h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {mockCourses.slice(0, 2).map(course => (
@@ -168,7 +197,7 @@ const Index = () => {
               <TabsContent value="courses" id="courses">
                 <section>
                   <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold">All Courses</h2>
+                    <h2 className="text-2xl font-bold">All Trade Courses</h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {mockCourses.map(course => (
@@ -219,14 +248,14 @@ const Index = () => {
               
               <TabsContent value="cheering" id="cheering">
                 <section className="space-y-6">
-                  <h2 className="text-2xl font-bold mb-4">Cheering Dashboard</h2>
+                  <h2 className="text-2xl font-bold mb-4">Community Cheering Dashboard</h2>
                   
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div>
                       <h3 className="text-xl font-medium mb-4">Cheer a Student</h3>
                       <BettingInterface 
                         course={mockCourses[0]} 
-                        studentName="Alex Rodriguez" 
+                        studentName="Jordan Martinez" 
                         onPlaceBet={handleBet} 
                       />
                     </div>
@@ -236,21 +265,38 @@ const Index = () => {
                     </div>
                   </div>
                   
-                  <div className="bg-gray-50 p-6 rounded-lg">
-                    <h3 className="text-xl font-medium mb-4">How Cheering Works</h3>
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
+                    <h3 className="text-xl font-medium mb-4">How Community Cheering Works</h3>
                     <div className="space-y-4 text-sm">
-                      <p>You can cheer students on whether they will complete courses and what grades they'll achieve.</p>
-                      <div className="flex space-x-2 items-center">
-                        <div className="h-2 w-2 bg-web3-primary rounded-full"></div>
-                        <span>If your prediction is correct, you earn returns based on the odds.</span>
-                      </div>
-                      <div className="flex space-x-2 items-center">
-                        <div className="h-2 w-2 bg-web3-primary rounded-full"></div>
-                        <span>Students who complete courses earn their stake back plus a share of losing cheers.</span>
-                      </div>
-                      <div className="flex space-x-2 items-center">
-                        <div className="h-2 w-2 bg-web3-primary rounded-full"></div>
-                        <span>The platform ensures fair distribution of funds between all participants.</span>
+                      <p className="text-gray-700">
+                        Support young people learning practical trades by cheering their success. 
+                        Parents, family, and community members can stake on student outcomes.
+                      </p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex items-start space-x-3">
+                          <div className="h-3 w-3 bg-web3-primary rounded-full mt-1"></div>
+                          <span className="text-gray-700">
+                            <strong>Motivate Students:</strong> Cheering creates additional incentive for students to complete their training
+                          </span>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="h-3 w-3 bg-web3-secondary rounded-full mt-1"></div>
+                          <span className="text-gray-700">
+                            <strong>Earn Returns:</strong> Successful predictions earn returns based on community odds
+                          </span>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="h-3 w-3 bg-web3-success rounded-full mt-1"></div>
+                          <span className="text-gray-700">
+                            <strong>Build Community:</strong> Families and local businesses invest in workforce development
+                          </span>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="h-3 w-3 bg-web3-warning rounded-full mt-1"></div>
+                          <span className="text-gray-700">
+                            <strong>Blockchain Verified:</strong> All achievements and certifications are permanently recorded
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -261,34 +307,44 @@ const Index = () => {
         </div>
       </main>
       
-      <footer className="bg-web3-dark text-white py-6 mt-12">
+      <footer className="bg-web3-dark text-white py-8 mt-12">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-              <h2 className="text-xl font-bold web3-gradient-text">Web3 Academy</h2>
-              <p className="text-gray-400 text-sm mt-1">Learn, Stake, Earn</p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="md:col-span-2">
+              <h2 className="text-2xl font-bold web3-gradient-text mb-4">Technical Skills Academy</h2>
+              <p className="text-gray-400 mb-4">
+                Bridging traditional trades with cutting-edge technology. 
+                Preparing the next generation of skilled workers for an AI-driven world.
+              </p>
+              <div className="flex space-x-4 text-sm">
+                <span className="bg-web3-primary/20 px-3 py-1 rounded">AI-Enhanced</span>
+                <span className="bg-web3-secondary/20 px-3 py-1 rounded">Blockchain Certified</span>
+                <span className="bg-web3-success/20 px-3 py-1 rounded">Community Supported</span>
+              </div>
             </div>
-            <div className="flex space-x-8">
-              <div>
-                <h3 className="font-medium mb-2">Platform</h3>
-                <ul className="text-sm text-gray-400 space-y-1">
-                  <li>Courses</li>
-                  <li>Staking</li>
-                  <li>Cheering</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-medium mb-2">Resources</h3>
-                <ul className="text-sm text-gray-400 space-y-1">
-                  <li>Documentation</li>
-                  <li>Community</li>
-                  <li>Support</li>
-                </ul>
-              </div>
+            <div>
+              <h3 className="font-semibold mb-3">Trade Courses</h3>
+              <ul className="text-sm text-gray-400 space-y-2">
+                <li>Electrical Systems</li>
+                <li>Plumbing & HVAC</li>
+                <li>Automotive Repair</li>
+                <li>Construction Tech</li>
+                <li>Welding & Fabrication</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-3">Community</h3>
+              <ul className="text-sm text-gray-400 space-y-2">
+                <li>Student Support</li>
+                <li>Family Cheering</li>
+                <li>Local Businesses</li>
+                <li>Workforce Development</li>
+                <li>Career Placement</li>
+              </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-6 pt-6 text-center text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} Web3 Academy DAO. All rights reserved.
+          <div className="border-t border-gray-800 mt-8 pt-6 text-center text-sm text-gray-500">
+            &copy; {new Date().getFullYear()} Technical Skills Academy. Building tomorrow's skilled workforce today.
           </div>
         </div>
       </footer>
