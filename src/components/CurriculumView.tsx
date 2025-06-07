@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Module } from '@/data/mockData';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Clock, Award, Wrench, BookOpen } from 'lucide-react';
+import { Clock, Award, Wrench, BookOpen, Brain, Shield, Users } from 'lucide-react';
 
 interface CurriculumViewProps {
   modules: Module[];
@@ -22,7 +22,9 @@ const CurriculumView: React.FC<CurriculumViewProps> = ({ modules, courseName, on
     switch (type) {
       case 'hands-on': return <Wrench className="h-4 w-4 text-orange-600" />;
       case 'project': return <Award className="h-4 w-4 text-purple-600" />;
-      case 'assessment': return <Award className="h-4 w-4 text-blue-600" />;
+      case 'assessment': return <Shield className="h-4 w-4 text-blue-600" />;
+      case 'ai-training': return <Brain className="h-4 w-4 text-pink-600" />;
+      case 'blockchain': return <Users className="h-4 w-4 text-indigo-600" />;
       default: return <BookOpen className="h-4 w-4 text-green-600" />;
     }
   };
@@ -32,7 +34,9 @@ const CurriculumView: React.FC<CurriculumViewProps> = ({ modules, courseName, on
       case 'hands-on': return 'Hands-On Lab';
       case 'project': return 'Capstone Project';
       case 'assessment': return 'Skills Assessment';
-      default: return 'Video Lesson';
+      case 'ai-training': return 'AI Training';
+      case 'blockchain': return 'Blockchain Module';
+      default: return 'Theory Lesson';
     }
   };
   
@@ -41,6 +45,8 @@ const CurriculumView: React.FC<CurriculumViewProps> = ({ modules, courseName, on
       case 'hands-on': return 'bg-orange-100 text-orange-800';
       case 'project': return 'bg-purple-100 text-purple-800';
       case 'assessment': return 'bg-blue-100 text-blue-800';
+      case 'ai-training': return 'bg-pink-100 text-pink-800';
+      case 'blockchain': return 'bg-indigo-100 text-indigo-800';
       default: return 'bg-green-100 text-green-800';
     }
   };
@@ -62,9 +68,16 @@ const CurriculumView: React.FC<CurriculumViewProps> = ({ modules, courseName, on
           </div>
           <Progress value={progressPercentage} className="h-3" />
           <div className="flex justify-between text-xs text-gray-500">
-            <span>Keep going! You're making great progress.</span>
+            <span>Keep going! Building essential technical skills.</span>
             <span>{Math.round(progressPercentage)}%</span>
           </div>
+        </div>
+        
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+          <p className="text-xs text-amber-800">
+            <strong>Attendance Policy:</strong> Modules marked with 🏫 require in-person attendance. 
+            Online modules can be completed remotely. Attendance affects your stake refund.
+          </p>
         </div>
         
         <Accordion type="single" collapsible className="w-full">
@@ -89,6 +102,9 @@ const CurriculumView: React.FC<CurriculumViewProps> = ({ modules, courseName, on
                     <div className="flex items-center space-x-2">
                       {getModuleIcon(module.type)}
                       <span className="font-medium">{module.title}</span>
+                      {module.attendanceRequired && (
+                        <span className="text-xs">🏫</span>
+                      )}
                     </div>
                     <div className="flex items-center space-x-2 mt-1">
                       <span className={`text-xs px-2 py-1 rounded ${getModuleTypeBadge(module.type)}`}>
@@ -109,8 +125,26 @@ const CurriculumView: React.FC<CurriculumViewProps> = ({ modules, courseName, on
                   {module.type === 'hands-on' && (
                     <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
                       <p className="text-sm text-orange-800">
-                        <strong>⚡ Practical Lab:</strong> This module requires hands-on work with real tools and materials. 
-                        Make sure you have access to the required equipment and safety gear.
+                        <strong>🔧 Hands-On Lab:</strong> This module requires physical attendance and hands-on work with tools and equipment. 
+                        Safety gear and materials will be provided.
+                      </p>
+                    </div>
+                  )}
+                  
+                  {module.type === 'ai-training' && (
+                    <div className="bg-pink-50 border border-pink-200 rounded-lg p-3">
+                      <p className="text-sm text-pink-800">
+                        <strong>🧠 AI Training:</strong> Learn to use AI-powered tools and diagnostic equipment. 
+                        This module prepares you for modern industrial maintenance.
+                      </p>
+                    </div>
+                  )}
+                  
+                  {module.type === 'blockchain' && (
+                    <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
+                      <p className="text-sm text-indigo-800">
+                        <strong>⛓️ Blockchain Module:</strong> Understanding how blockchain technology tracks certifications, 
+                        work history, and quality standards in modern industry.
                       </p>
                     </div>
                   )}
@@ -118,8 +152,17 @@ const CurriculumView: React.FC<CurriculumViewProps> = ({ modules, courseName, on
                   {module.type === 'project' && (
                     <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
                       <p className="text-sm text-purple-800">
-                        <strong>🏆 Capstone Project:</strong> This is a major project that demonstrates your mastery 
-                        of the skills learned in this course. Plan extra time for completion.
+                        <strong>🏆 Capstone Project:</strong> Apply all learned skills in a comprehensive project. 
+                        This demonstrates your readiness for professional work.
+                      </p>
+                    </div>
+                  )}
+                  
+                  {module.attendanceRequired && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                      <p className="text-sm text-blue-800">
+                        <strong>🏫 Attendance Required:</strong> This module requires in-person attendance. 
+                        Missing this session may affect your final grade and stake refund.
                       </p>
                     </div>
                   )}
@@ -136,7 +179,9 @@ const CurriculumView: React.FC<CurriculumViewProps> = ({ modules, courseName, on
                       </label>
                     </div>
                     {!module.completed && (
-                      <span className="text-xs text-gray-400">Ready to start</span>
+                      <span className="text-xs text-gray-400">
+                        {module.attendanceRequired ? 'Attendance required' : 'Online available'}
+                      </span>
                     )}
                   </div>
                 </div>

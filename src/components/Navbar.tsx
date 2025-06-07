@@ -23,12 +23,12 @@ const Navbar: React.FC = () => {
     <nav className="bg-web3-dark border-b border-web3-primary/20 py-4 px-6">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center">
-          <h1 className="text-2xl font-bold web3-gradient-text mr-8">Web3 Academy</h1>
+          <h1 className="text-2xl font-bold web3-gradient-text mr-8">Technical Skills for Industry</h1>
           <div className="hidden md:flex space-x-6">
             <button onClick={() => handleNavigation('dashboard')} className="text-white hover:text-web3-secondary transition-colors">Dashboard</button>
             <button onClick={() => handleNavigation('courses')} className="text-white hover:text-web3-secondary transition-colors">Courses</button>
-            <button onClick={() => handleNavigation('staking')} className="text-white hover:text-web3-secondary transition-colors">Staking</button>
-            <button onClick={() => handleNavigation('cheering')} className="text-white hover:text-web3-secondary transition-colors">Cheering</button>
+            <button onClick={() => handleNavigation('staking')} className="text-white hover:text-web3-secondary transition-colors">Enrollment</button>
+            <button onClick={() => handleNavigation('cheering')} className="text-white hover:text-web3-secondary transition-colors">Family Support</button>
           </div>
         </div>
         

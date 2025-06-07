@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Course } from '@/data/mockData';
 import { useWalletContext } from '@/contexts/WalletContext';
-import { Clock, BookOpen, Award } from 'lucide-react';
+import { Clock, BookOpen, Award, ArrowRight } from 'lucide-react';
 
 interface CourseCardProps {
   course: Course;
@@ -19,10 +19,22 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
   
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'Beginner': return 'bg-green-100 text-green-800 hover:bg-green-200';
+      case 'Foundation': return 'bg-green-100 text-green-800 hover:bg-green-200';
       case 'Intermediate': return 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200';
-      case 'Advanced': return 'bg-red-100 text-red-800 hover:bg-red-200';
+      case 'Advanced': return 'bg-orange-100 text-orange-800 hover:bg-orange-200';
+      case 'Professional': return 'bg-red-100 text-red-800 hover:bg-red-200';
       default: return 'bg-gray-100 text-gray-800 hover:bg-gray-200';
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'Electrical': return 'bg-blue-100 text-blue-800';
+      case 'Plumbing': return 'bg-cyan-100 text-cyan-800';
+      case 'Mechanics': return 'bg-purple-100 text-purple-800';
+      case 'Engineering': return 'bg-indigo-100 text-indigo-800';
+      case 'Metalwork': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
   
@@ -34,7 +46,15 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
           alt={course.title} 
           className="w-full h-full object-cover"
         />
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-3 left-3">
+          <Badge className="bg-web3-primary text-white font-bold">
+            Course {course.courseNumber}
+          </Badge>
+        </div>
+        <div className="absolute top-3 right-3 flex flex-col gap-2">
+          <Badge className={getCategoryColor(course.category)}>
+            {course.category}
+          </Badge>
           <Badge className={getDifficultyColor(course.difficulty)}>
             {course.difficulty}
           </Badge>
@@ -95,7 +115,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
             className="bg-web3-gradient hover:brightness-110 transition-all text-white"
             onClick={() => onEnroll(course.id)}
           >
-            <BookOpen className="w-4 h-4 mr-2" />
+            <ArrowRight className="w-4 h-4 mr-2" />
             Enroll
           </Button>
         )}

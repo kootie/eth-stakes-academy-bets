@@ -54,10 +54,24 @@ const Index = () => {
   
   const enrolledCourseTitles = enrolledCourses.map(course => course.title);
 
+  // Get next available course based on sequential progression
+  const getNextAvailableCourse = () => {
+    return mockCourses.find(course => course.courseNumber === user.currentCourseNumber);
+  };
+
   const handleEnroll = (courseId: string) => {
-    // In a real app, this would open the staking dialog
     const course = mockCourses.find(c => c.id === courseId);
     if (course) {
+      // Check if course is in sequence
+      if (course.courseNumber !== user.currentCourseNumber) {
+        toast({
+          title: "Course sequence required",
+          description: `You must complete courses in order. Next course: Course ${user.currentCourseNumber}`,
+          variant: "destructive"
+        });
+        return;
+      }
+      
       toast({
         title: "Ready to enroll",
         description: `Click stake to enroll in ${course.title}`,
@@ -66,7 +80,6 @@ const Index = () => {
   };
 
   const handleStake = (courseId: string, amount: number) => {
-    // In a real app, this would connect to a wallet and stake ETH
     const updatedUser = { 
       ...user, 
       stakingBalance: user.stakingBalance - amount,
@@ -74,20 +87,23 @@ const Index = () => {
     };
     
     setUser(updatedUser);
+    
+    toast({
+      title: "Enrollment successful!",
+      description: "Your stake will be refunded based on attendance and completion.",
+    });
   };
 
   const handleBet = (prediction: "complete" | "incomplete", amount: number, grade?: string) => {
-    // In a real app, this would connect to a wallet and place a bet
     toast({
       title: "Cheer placed",
-      description: `You've cheered with ${amount} ETH. Good luck!`,
+      description: `You've cheered with ${amount} ETH. Supporting student success!`,
     });
 
-    // Create a new cheer and add it to active cheers
     const newCheer = {
       id: `cheer-${Date.now()}`,
       studentName: "Alex Rodriguez",
-      courseName: "Web3 Startup Fundamentals",
+      courseName: "Course 1: Electrical Fundamentals & Safety",
       prediction,
       amount,
       grade,
@@ -107,6 +123,8 @@ const Index = () => {
     setModules(updatedModules);
   };
 
+  const nextCourse = getNextAvailableCourse();
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -115,20 +133,21 @@ const Index = () => {
         {/* Hero Section */}
         <section className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            <span className="web3-gradient-text">Technical Skills Academy</span>
+            <span className="web3-gradient-text">Technical Skills for Industry</span>
           </h1>
           <p className="text-xl text-gray-600 mb-6 max-w-3xl mx-auto">
-            Master practical trades enhanced with AI and blockchain technology. 
-            Build the skills needed to maintain and operate tomorrow's smart infrastructure.
+            Master essential technical trades through a sequential 10-course program. 
+            Learn plumbing, electrical, mechanics, engineering, and metalwork enhanced with AI and blockchain technology. 
+            Build the skills needed to maintain tomorrow's industrial and AI systems.
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500 mb-8">
             <span className="flex items-center">
               <div className="w-2 h-2 bg-web3-primary rounded-full mr-2"></div>
-              Hands-on Learning
+              Sequential Learning Path
             </span>
             <span className="flex items-center">
               <div className="w-2 h-2 bg-web3-secondary rounded-full mr-2"></div>
-              AI-Enhanced Tools
+              AI-Enhanced Training
             </span>
             <span className="flex items-center">
               <div className="w-2 h-2 bg-web3-success rounded-full mr-2"></div>
@@ -136,7 +155,7 @@ const Index = () => {
             </span>
             <span className="flex items-center">
               <div className="w-2 h-2 bg-web3-warning rounded-full mr-2"></div>
-              Community Cheering
+              Family & Community Support
             </span>
           </div>
         </section>
@@ -152,42 +171,50 @@ const Index = () => {
             <Tabs defaultValue={activeTab} value={activeTab} onValueChange={handleTabChange}>
               <TabsList className="mb-6">
                 <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-                <TabsTrigger value="courses">All Courses</TabsTrigger>
-                <TabsTrigger value="staking">Staking</TabsTrigger>
-                <TabsTrigger value="cheering">Community Cheering</TabsTrigger>
+                <TabsTrigger value="courses">Course Sequence</TabsTrigger>
+                <TabsTrigger value="staking">Enrollment</TabsTrigger>
+                <TabsTrigger value="cheering">Family Support</TabsTrigger>
               </TabsList>
               
               <TabsContent value="dashboard" id="dashboard" className="space-y-6">
                 <section>
                   <h2 className="text-2xl font-bold mb-4">Your Learning Journey</h2>
-                  <div className="grid grid-cols-1 gap-4">
-                    {wallet.isConnected && user.enrolledCourses.length > 0 ? (
+                  {wallet.isConnected && user.enrolledCourses.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-4">
                       <CurriculumView 
                         modules={modules} 
-                        courseName="Smart Electrical Systems" 
+                        courseName="Course 1: Electrical Fundamentals & Safety" 
                         onModuleComplete={handleModuleComplete} 
                       />
-                    ) : (
-                      <div className="bg-white p-6 rounded-lg shadow text-center">
-                        <h3 className="text-xl font-medium mb-2">Start Your Trade Career</h3>
-                        <p className="mb-4">Begin with foundational skills and advance to AI-enhanced techniques.</p>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h3 className="font-medium text-blue-900 mb-2">Attendance & Payment</h3>
+                        <p className="text-sm text-blue-800">
+                          Your stake refund is based on course completion and attendance. Current attendance: {user.attendanceRecord["1"] || 0}%
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-white p-6 rounded-lg shadow text-center">
+                      <h3 className="text-xl font-medium mb-2">Start Your Technical Career</h3>
+                      <p className="mb-4">Begin with Course 1 and progress through our 10-course sequence to master industrial skills.</p>
+                      {nextCourse && (
                         <StakingForm 
-                          courseTitle="Smart Electrical Systems" 
-                          courseId="1"
-                          minimumStake={0.8} 
+                          courseTitle={nextCourse.title} 
+                          courseId={nextCourse.id}
+                          minimumStake={nextCourse.stakingAmount} 
                           onStake={handleStake} 
                         />
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  )}
                 </section>
                 
                 <section>
                   <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold">Popular Trade Courses</h2>
+                    <h2 className="text-2xl font-bold">Course Progression</h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {mockCourses.slice(0, 2).map(course => (
+                    {mockCourses.slice(0, 4).map(course => (
                       <CourseCard key={course.id} course={course} onEnroll={handleEnroll} />
                     ))}
                   </div>
@@ -197,7 +224,13 @@ const Index = () => {
               <TabsContent value="courses" id="courses">
                 <section>
                   <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold">All Trade Courses</h2>
+                    <h2 className="text-2xl font-bold">10-Course Technical Sequence</h2>
+                  </div>
+                  <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <p className="text-sm text-amber-800">
+                      <strong>Sequential Learning:</strong> Courses must be completed in order (1-10). 
+                      Each course builds on previous knowledge and skills.
+                    </p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {mockCourses.map(course => (
@@ -210,35 +243,49 @@ const Index = () => {
               <TabsContent value="staking" id="staking">
                 <section className="space-y-6">
                   <div>
-                    <h2 className="text-2xl font-bold mb-4">Your Stakes</h2>
+                    <h2 className="text-2xl font-bold mb-4">Course Enrollment</h2>
                     <div className="bg-white p-6 rounded-lg shadow">
                       <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-medium">Total Staked</h3>
+                        <h3 className="text-lg font-medium">Your Stakes</h3>
                         <span className="eth-icon font-medium">{user.stakingBalance} ETH</span>
                       </div>
                       
                       <div className="space-y-4 mt-6">
-                        <h4 className="text-md font-medium">Active Stakes</h4>
+                        <h4 className="text-md font-medium">Enrolled Courses</h4>
                         {user.enrolledCourses.length > 0 ? (
                           <div className="space-y-2">
                             {enrolledCourses.map(course => (
-                              <div key={course.id} className="flex justify-between bg-gray-50 p-3 rounded-md">
-                                <span>{course.title}</span>
+                              <div key={course.id} className="flex justify-between items-center bg-gray-50 p-3 rounded-md">
+                                <div>
+                                  <span className="font-medium">{course.title}</span>
+                                  <p className="text-xs text-gray-500">
+                                    Attendance: {user.attendanceRecord[course.id] || 0}%
+                                  </p>
+                                </div>
                                 <span className="eth-icon">{course.stakingAmount} ETH</span>
                               </div>
                             ))}
                           </div>
                         ) : (
-                          <p className="text-sm text-gray-500">No active stakes</p>
+                          <p className="text-sm text-gray-500">No enrolled courses</p>
                         )}
                       </div>
                     </div>
                   </div>
                   
                   <div>
-                    <h2 className="text-2xl font-bold mb-4">Stake in a New Course</h2>
+                    <h2 className="text-2xl font-bold mb-4">Available for Enrollment</h2>
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                      <h3 className="font-medium text-blue-900 mb-2">Payment & Refund Policy</h3>
+                      <ul className="text-sm text-blue-800 space-y-1">
+                        <li>• Stake ETH to enroll in courses</li>
+                        <li>• Refunds based on course completion (70%) and attendance (30%)</li>
+                        <li>• Minimum 80% attendance required for full refund</li>
+                        <li>• Community cheering provides additional rewards</li>
+                      </ul>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {mockCourses.slice(0, 3).map(course => (
+                      {mockCourses.slice(user.currentCourseNumber - 1, user.currentCourseNumber + 2).map(course => (
                         <CourseCard key={course.id} course={course} onEnroll={handleEnroll} />
                       ))}
                     </div>
@@ -248,7 +295,7 @@ const Index = () => {
               
               <TabsContent value="cheering" id="cheering">
                 <section className="space-y-6">
-                  <h2 className="text-2xl font-bold mb-4">Community Cheering Dashboard</h2>
+                  <h2 className="text-2xl font-bold mb-4">Family & Community Support</h2>
                   
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div>
@@ -266,35 +313,35 @@ const Index = () => {
                   </div>
                   
                   <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
-                    <h3 className="text-xl font-medium mb-4">How Community Cheering Works</h3>
+                    <h3 className="text-xl font-medium mb-4">Supporting Technical Education</h3>
                     <div className="space-y-4 text-sm">
                       <p className="text-gray-700">
-                        Support young people learning practical trades by cheering their success. 
-                        Parents, family, and community members can stake on student outcomes.
+                        Family, friends, and community members can support students by placing "cheers" - 
+                        bets on their success in technical training programs.
                       </p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="flex items-start space-x-3">
                           <div className="h-3 w-3 bg-web3-primary rounded-full mt-1"></div>
                           <span className="text-gray-700">
-                            <strong>Motivate Students:</strong> Cheering creates additional incentive for students to complete their training
+                            <strong>Motivate Students:</strong> Financial backing creates accountability and motivation
                           </span>
                         </div>
                         <div className="flex items-start space-x-3">
                           <div className="h-3 w-3 bg-web3-secondary rounded-full mt-1"></div>
                           <span className="text-gray-700">
-                            <strong>Earn Returns:</strong> Successful predictions earn returns based on community odds
+                            <strong>Earn Returns:</strong> Successful students generate returns for supporters
                           </span>
                         </div>
                         <div className="flex items-start space-x-3">
                           <div className="h-3 w-3 bg-web3-success rounded-full mt-1"></div>
                           <span className="text-gray-700">
-                            <strong>Build Community:</strong> Families and local businesses invest in workforce development
+                            <strong>Build Workforce:</strong> Community investment in skilled trades training
                           </span>
                         </div>
                         <div className="flex items-start space-x-3">
                           <div className="h-3 w-3 bg-web3-warning rounded-full mt-1"></div>
                           <span className="text-gray-700">
-                            <strong>Blockchain Verified:</strong> All achievements and certifications are permanently recorded
+                            <strong>Verified Results:</strong> Blockchain tracking of attendance and completion
                           </span>
                         </div>
                       </div>
@@ -311,40 +358,40 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
-              <h2 className="text-2xl font-bold web3-gradient-text mb-4">Technical Skills Academy</h2>
+              <h2 className="text-2xl font-bold web3-gradient-text mb-4">Technical Skills for Industry</h2>
               <p className="text-gray-400 mb-4">
-                Bridging traditional trades with cutting-edge technology. 
-                Preparing the next generation of skilled workers for an AI-driven world.
+                Preparing skilled technicians for the AI-driven industrial future. 
+                Sequential 10-course program combining traditional trades with cutting-edge technology.
               </p>
               <div className="flex space-x-4 text-sm">
-                <span className="bg-web3-primary/20 px-3 py-1 rounded">AI-Enhanced</span>
-                <span className="bg-web3-secondary/20 px-3 py-1 rounded">Blockchain Certified</span>
-                <span className="bg-web3-success/20 px-3 py-1 rounded">Community Supported</span>
+                <span className="bg-web3-primary/20 px-3 py-1 rounded">Sequential Learning</span>
+                <span className="bg-web3-secondary/20 px-3 py-1 rounded">AI-Enhanced</span>
+                <span className="bg-web3-success/20 px-3 py-1 rounded">Family Supported</span>
               </div>
             </div>
             <div>
-              <h3 className="font-semibold mb-3">Trade Courses</h3>
+              <h3 className="font-semibold mb-3">Course Categories</h3>
               <ul className="text-sm text-gray-400 space-y-2">
                 <li>Electrical Systems</li>
-                <li>Plumbing & HVAC</li>
-                <li>Automotive Repair</li>
-                <li>Construction Tech</li>
-                <li>Welding & Fabrication</li>
+                <li>Plumbing & Hydraulics</li>
+                <li>Mechanical Systems</li>
+                <li>Engineering & CAD</li>
+                <li>Metalwork & Fabrication</li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold mb-3">Community</h3>
+              <h3 className="font-semibold mb-3">Support System</h3>
               <ul className="text-sm text-gray-400 space-y-2">
-                <li>Student Support</li>
                 <li>Family Cheering</li>
-                <li>Local Businesses</li>
-                <li>Workforce Development</li>
+                <li>Community Investment</li>
+                <li>Attendance Tracking</li>
+                <li>Performance Rewards</li>
                 <li>Career Placement</li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-6 text-center text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} Technical Skills Academy. Building tomorrow's skilled workforce today.
+            &copy; {new Date().getFullYear()} Technical Skills for Industry. Building tomorrow's skilled workforce today.
           </div>
         </div>
       </footer>
